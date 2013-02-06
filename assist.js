@@ -11,6 +11,10 @@
 	else assist = root.assist = {};
 
 	assist.enableLog = true;
+	assist.prevloadAjaxIds = {
+		'domId' : [],
+		'fileUrl' : [],
+	};
 
 	assist.getType = function(obj) {
 		return toString.call(obj).toLowerCase();
@@ -96,7 +100,7 @@
 		return false;
 	};
 
-	assist.convertDataToLowerCase = function(input) {
+	assist.convertDataToLowerCase = function(input, keys) {
 		if(assist.isNull(input)) {
 			return input;
 		} else if(assist.isString(input)) {
@@ -107,7 +111,8 @@
 		} else if (assist.isObject(input)) {
 			var newObject = {};
 			for(var i in input) {
-				var key = i.toLowerCase();
+				if(keys) var key = i.toLowerCase();
+				else var key = i;
 				if(assist.isString(input[i])) input[i] = input[i].toLowerCase();
 				newObject[key] = input[i];
 			}
@@ -120,4 +125,51 @@
 	assist.log = function(msg) {
 		if(assist.enableLog) console.log.apply(console, arguments);
 	};
+
+	assist.inArray = function(array, search) {
+		if(!assist.isArray(array)) return false;
+		else if (array.indexOf(search) != -1) return true;
+		return false
+	};
+
+	assist.loadAjaxFile = function(options) {
+		options = options || {};
+
+		if(assist.isNull(options)) return;
+		if(!(options.url)) return;
+
+		var tempId = (options.id) ? options.id : new Date().getTime();
+		var id = 'assist_' + tempId;
+		var fileUrl = options.url;
+
+		if(assist.inArray(assist.prevloadAjaxIds.domId, id)) return;
+		if(assist.inArray(assist.prevloadAjaxIds.fileUrl, fileUrl)) return;
+
+		this.prevloadAjaxIds.domId.push(id);
+		this.prevloadAjaxIds.fileUrl.push(fileUrl);
+		var oHead = document.getElementsByTagName('HEAD').item(0);
+		var oScript = document.createElement("script");
+		oScript.setAttribute('id', id);
+		oScript.type = "text/javascript";	
+		oScript.src = fileUrl;
+		oScript.onerror = this.loadAjaxFileError;
+		oScript.onload = this.loadAjaxFileSuccess;
+
+		try {
+			oHead.appendChild(oScript);
+		} catch(e) {
+			assist.log('error loading file');
+			assist.log(e);
+		};
+	};
+
+	assist.loadAjaxFileError = function(err) {
+		assist.log('loadAjaxFileError');
+		assist.log(err)
+	};
+
+	assist.loadAjaxFileSuccess = function() {
+		assist.log('loadAjaxFileSuccess');
+	};
+
 }).call(this);
