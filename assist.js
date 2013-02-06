@@ -4,8 +4,8 @@
 
 
 (function() {
-	var root = this;
-	var assist;
+	var root = this,
+	assist;
 
 	if (typeof exports !== 'undefined') assist = exports;
 	else assist = root.assist = {};
@@ -15,6 +15,7 @@
 		'domId' : [],
 		'fileUrl' : [],
 	};
+	assist.ajaxCallback = {};
 
 	assist.getType = function(obj) {
 		return toString.call(obj).toLowerCase();
@@ -132,25 +133,40 @@
 		return false
 	};
 
+	assist.intToFloat = function(num, decPlaces) {
+		return num.toFixed(decPlaces);
+	}
+
+	/*
+	 *options here contains - url, domId, success(), error(), cacheFile(false by default)
+	*/
 	assist.loadAjaxFile = function(options) {
 		options = options || {};
 
 		if(assist.isNull(options)) return;
 		if(!(options.url)) return;
 
-		var tempId = (options.id) ? options.id : new Date().getTime();
-		var id = 'assist_' + tempId;
-		var fileUrl = options.url;
+		var fileUrl = options.url,
+		cacheFile = (options.cacheFile) ? options.cacheFile : false,
+		id = (!cacheFile) ? 'assist_file_id' : ((options.domId !== undefined) ? 'assist_' + options.domId : 'assist_' + new Date().getTime());
+
+		assist.ajaxCallback.success = (options.success) ? options.success : '';
+		assist.ajaxCallback.error = (options.error) ? options.error : '';
 
 		if(assist.inArray(assist.prevloadAjaxIds.domId, id)) return;
 		if(assist.inArray(assist.prevloadAjaxIds.fileUrl, fileUrl)) return;
 
-		this.prevloadAjaxIds.domId.push(id);
-		this.prevloadAjaxIds.fileUrl.push(fileUrl);
-		var oHead = document.getElementsByTagName('HEAD').item(0);
-		var oScript = document.createElement("script");
+		if(cacheFile) {
+			this.prevloadAjaxIds.domId.push(id);
+			this.prevloadAjaxIds.fileUrl.push(fileUrl);	
+		} else if(document.getElementById(id)) {
+			document.getElementById(id).remove();
+		}
+
+		var oHead = document.getElementsByTagName('HEAD').item(0),
+		oScript = document.createElement('script');
 		oScript.setAttribute('id', id);
-		oScript.type = "text/javascript";	
+		oScript.type = 'text/javascript';
 		oScript.src = fileUrl;
 		oScript.onerror = this.loadAjaxFileError;
 		oScript.onload = this.loadAjaxFileSuccess;
@@ -158,18 +174,16 @@
 		try {
 			oHead.appendChild(oScript);
 		} catch(e) {
-			assist.log('error loading file');
-			assist.log(e);
+			assist.loadAjaxFileError(e);
 		};
 	};
 
 	assist.loadAjaxFileError = function(err) {
-		assist.log('loadAjaxFileError');
-		assist.log(err)
+		if(assist.ajaxCallback.error) assist.ajaxCallback.error(err);
 	};
 
 	assist.loadAjaxFileSuccess = function() {
-		assist.log('loadAjaxFileSuccess');
+		if(assist.ajaxCallback.success) assist.ajaxCallback.success();
 	};
 
 }).call(this);
