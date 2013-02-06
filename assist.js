@@ -6,12 +6,9 @@
 (function() {
 	var root = this;
 	var assist;
-	
-	if (typeof exports !== 'undefined') {
-		assist = exports;
-	} else {
-		assist = root.assist = {};
-	}
+
+	if (typeof exports !== 'undefined') assist = exports;
+	else assist = root.assist = {};
 
 	assist.getType = function(obj) {
 		return toString.call(obj).toLowerCase();
@@ -97,16 +94,12 @@
 		return false;
 	};
 
-	assist.convertArrayToLowerCase = function(input) {
-		console.log('convertArrayToLowerCase');
-		if(_.isArray(input)) {
+	assist.convertDataToLowerCase = function(input) {
+		if(assist.isString(input)) {
+			return input.toLowerCase();
+		}
+		if(assist.isArray(input)) {
 			var newArray = input.join(",").toLowerCase().split(",");
-			return newArray;	
-		} else if(_.isString(input)) {
-			assist.log('this is a string')
-			var newArray = input.toLowerCase().split(',');
-			assist.log('new array');
-			assist.log(newArray)
 			return newArray;
 		} else {
 			return input;
