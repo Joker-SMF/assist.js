@@ -32,59 +32,45 @@
 
 	assist.isUndefined = function (input) {
 		var type = this.getType(input);
-		if(type === '[object undefined]') {
-			return true;
-		}
+		if(type === '[object undefined]') return true;
 		return false;
 	};
 
 	assist.isString = function (input) {
 		var type = this.getType(input);
-		if(type === '[object string]') {
-			return true;
-		} 
+		if(type === '[object string]') return true;
 		return false;
 	};
 
 	assist.isArray = function (input) {
 		var type = this.getType(input);
-		if(type === '[object array]') {
-			return true;
-		}
+		if(type === '[object array]') return true;
 		return false;
 	};
 
 	assist.isObject = function (input) {
 		var type = this.getType(input);
-		if(type === '[object object]' ) {
-			return true;
-		}
+		if(type === '[object object]' ) return true;
 		return false;
 	};
 
 	assist.isNumber = function (input) {
 		var type = this.getType(input);
 		var explode = this.explodeNumber(input);
-		if(type === '[object number]' && explode[2] === undefined) {
-			return true;
-		}
+		if(type === '[object number]' && explode[2] === undefined) return true;
 		return false;
 	};
 
 	assist.isFloat = function (input) {
 		var type = this.getType(input);
 		var explode = this.explodeNumber(input);
-		if(type === '[object number]' && explode[2] !== undefined) {
-			return true;
-		}
+		if(type === '[object number]' && explode[2] !== undefined) return true;
 		return false;
 	};
 
 	assist.isBoolean = function(input) {
 		var type = this.getType(input);
-		if(type === '[object boolean]') {
-			return true;
-		}
+		if(type === '[object boolean]') return true;
 		return false;
 	};
 
@@ -99,12 +85,17 @@
 
 	assist.isFunction = function(input) {
 		var type = this.getType(input);
-		if(type === '[object function]') {
-			return true;
-		}
+		if(type === '[object function]') return true;
 		return false;
 	};
 
+	assist.isDate = function(input) {
+		var type = this.getType(input);
+		if(type === '[object date]') return true;
+		return false;
+	};
+
+	/**/
 	assist.convertDataToLowerCase = function(input, keys) {
 		if(assist.isNull(input)) {
 			return input;
@@ -177,9 +168,32 @@
 		return objHasProperty.call(obj, key);
 	};
 
-	assist.objLength = function(obj) {
-		return objKeys(obj).length;
+	assist.getObjKeys = function(obj) {
+		return objKeys(obj);
 	};
+
+	assist.objLength = function(obj) {
+		return assist.getObjKeys(obj).length;
+	};
+
+	//Functions related to time
+	/*
+	 *Just to get timestamp
+	 *One can send string, dates
+	*/
+	assist.getTimeStamp = function(input, offset) {
+		if(assist.isString(input)) return Date.parse(input);
+		else if(assist.isDate(input)) var time = input;
+		else if(assist.isUndefined(input)) var time = new Date();
+		return time.getTime();
+	}
+
+	assist.getUnixTimeStamp = function(input, offset) {
+		if(assist.isString(input)) return Math.round(Date.parse(input) / 1000);
+		else if(assist.isDate(input)) var time = input;
+		else if(assist.isUndefined(input)) var time = new Date();
+		return Math.round(time.getTime() / 1000)
+	}
 
 	/*
 	 *options here contains - url, domId, success(), error(), cacheFile(false by default)
