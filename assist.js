@@ -136,12 +136,6 @@
 	}
 
 	//all array related function
-	assist.inArray = function(array, search) {
-		if(!assist.isArray(array)) return false;
-		else if (array.indexOf(search) != -1) return true;
-		return false;
-	};
-
 	/*
 	 *can be used for array, multidimentional arrays (2d), strings
 	*/
