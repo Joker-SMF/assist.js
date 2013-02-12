@@ -10,16 +10,16 @@
 	if (typeof exports !== 'undefined') assist = exports;
 	else assist = root.assist = {};
 
+	var slice = Array.prototype.slice,
+	objHasProperty = Object.prototype.hasOwnProperty
+	objKeys = Object.keys;
+
 	assist.enableLog = true;
 	assist.prevloadAjaxIds = {
 		'domId' : [],
 		'fileUrl' : [],
 	};
 	assist.ajaxCallback = {};
-
-	var slice = Array.prototype.slice,
-	objHasProperty = Object.prototype.hasOwnProperty
-	objKeys = Object.keys;
 
 	assist.getType = function(obj) {
 		return toString.call(obj).toLowerCase();
