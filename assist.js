@@ -79,7 +79,7 @@
 		if(type === '[object null]') return true;
 		if(type === '[object undefined]') return true;
 		if (type !== '[object object]') return input.length === 0;
-		for(var i in input) if (input.hasOwnProperty(i)) return false;
+		for(var i in input) if (input.objHasProperty(i)) return false;
 		return true;
 	};
 
