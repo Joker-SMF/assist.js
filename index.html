@@ -1,5 +1,11 @@
 <html>
     <head>
         <script type="text/javascript" src="assist.js"></script>
+        <script type="text/javascript">
+            function noError(message, url, linenumber){
+				assist.log(['error: ', message, url, linenumber].join('\n'));
+			}
+            window.onerror = noError;
+        </script>
     </head>
 </html>

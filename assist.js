@@ -19,8 +19,12 @@
 	};
 	assist.ajaxCallback = {};
 
+	assist.log = function(msg) {
+		if(assist.enableLog) console.log.apply(console, arguments);
+	};
+
 	assist.getType = function(obj) {
-		return toString.call(obj).toLowerCase();
+		return ({}).toString.call(obj).toLowerCase();
 	};
 
 	assist.explodeNumber = function(input) {
@@ -136,10 +140,6 @@
 		}
 	};
 
-	assist.log = function(msg) {
-		if(assist.enableLog) console.log.apply(console, arguments);
-	};
-
 	assist.intToFloat = function(num, decPlaces) {
 		return num.toFixed(decPlaces);
 	}
@@ -201,16 +201,14 @@
 	*/
 	assist.getTimeStamp = function(input, offset) {
 		if(assist.isString(input)) return Date.parse(input);
-		else if(assist.isDate(input)) var time = input;
-		else if(assist.isUndefined(input)) var time = new Date();
-		return time.getTime();
+		else if(assist.isDate(input)) return input.getTime();
+		return new Date().getTime();
 	}
 
 	assist.getUnixTimeStamp = function(input, offset) {
 		if(assist.isString(input)) return Math.round(Date.parse(input) / 1000);
-		else if(assist.isDate(input)) var time = input;
-		else if(assist.isUndefined(input)) var time = new Date();
-		return Math.round(time.getTime() / 1000)
+		else if(assist.isDate(input)) return Math.round(input.getTime() / 1000);
+		return Math.round(new Date().getTime() / 1000)
 	}
 
 	/*
