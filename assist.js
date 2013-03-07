@@ -95,6 +95,25 @@
 		return false;
 	};
 
+	/*
+	 *each with break functionality
+	*/
+	assist.each = function(input, callback, args) {
+		var data = {}, val, i = 0, length = input.length;
+		if(assist.isArray(input)) {
+			for (; i < length; i++ ) {
+				var val = callback.call(args, input[i], i);
+				if ( val === false ) break;
+				if (val === data) return;
+			}
+		} else if(assist.isObject(input)) {
+			for (k in input) {
+				var val = callback.call(args, input[k], k);
+				if ( val === false ) break;
+				if (val === data) return;
+			}
+		}
+	};
 	/**/
 	assist.convertDataToLowerCase = function(input, keys) {
 		if(assist.isNull(input)) {
