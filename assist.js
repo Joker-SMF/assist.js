@@ -10,9 +10,7 @@
 	if (typeof exports !== 'undefined') assist = exports;
 	else assist = root.assist = {};
 
-	var slice = Array.prototype.slice,
-	objHasProperty = Object.prototype.hasOwnProperty
-	objKeys = Object.keys;
+	var slice = Array.prototype.slice, objHasProperty = Object.prototype.hasOwnProperty, objKeys = Object.keys;
 
 	assist.enableLog = true;
 	assist.prevloadAjaxIds = {
@@ -79,7 +77,7 @@
 		if(type === '[object null]') return true;
 		if(type === '[object undefined]') return true;
 		if (type !== '[object object]') return input.length === 0;
-		for(var i in input) if (input.objHasProperty(i)) return false;
+		for(var i in input) if (objHasProperty.call(input, i)) return false;
 		return true;
 	};
 
@@ -114,6 +112,7 @@
 			}
 		}
 	};
+
 	/**/
 	assist.convertDataToLowerCase = function(input, keys) {
 		if(assist.isNull(input)) {
