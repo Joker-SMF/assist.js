@@ -1,7 +1,11 @@
 <html>
     <head>
+        <script type="text/javascript">
+            var assist = {'test': '2'};
+        </script>
         <script type="text/javascript" src="assist.js"></script>
         <script type="text/javascript">
+            assist.noConflict('test');
             function noError(message, url, linenumber){
 				assist.log(['error: ', message, url, linenumber].join('\n'));
 			}

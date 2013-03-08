@@ -4,12 +4,16 @@
 
 
 (function() {
-	var root = this,
-	assist;
+	var root = this, previousAssist = root.assist;
 
 	if (typeof exports !== 'undefined') assist = exports;
 	else assist = root.assist = {};
 
+	var assist;
+	assist.noConflict = function() {
+		root.assist = previousAssist;
+		return this;
+	};
 	var slice = Array.prototype.slice, objHasProperty = Object.prototype.hasOwnProperty, objKeys = Object.keys;
 
 	assist.enableLog = true;
