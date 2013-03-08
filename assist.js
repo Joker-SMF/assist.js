@@ -9,8 +9,18 @@
 	if (typeof exports !== 'undefined') assist = exports;
 	else assist = root.assist = {};
 
-	var slice = Array.prototype.slice, objHasProperty = Object.prototype.hasOwnProperty, objKeys = Object.keys;
 	var assist;
+	var arrayProto = Array.prototype,
+		objProto = Object.prototype,
+		slice = Array.prototype.slice,
+		objHasProperty = Object.prototype.hasOwnProperty,
+		objKeys = Object.keys,
+		objPreventExtensions = Object.preventExtensions,
+		objIsExtensible = Object.isExtensible,
+		objSeal = Object.seal,
+		objIsSealed = Object.isSealed,
+		objFreeze = Object.freeze,
+		objIsFrozen = Object.isFrozen;
 
 	assist.noConflict = function() {
 		root.assist = previousAssist;
@@ -102,7 +112,11 @@
 		return false;
 	};
 
-	/*
+	assist.intToFloat = function(num, decPlaces) {
+		return num.toFixed(decPlaces);
+	}
+
+	/*Generic function which can be used for array & objects
 	 *each with break functionality
 	*/
 	assist.each = function(input, callback, args) {
@@ -122,7 +136,8 @@
 		}
 	};
 
-	/**/
+	/*to convert array & object to lower case. Obj keys also supported
+	*/
 	assist.convertDataToLowerCase = function(input, keys) {
 		if(assist.isNull(input)) {
 			return input;
@@ -144,10 +159,6 @@
 			return input;
 		}
 	};
-
-	assist.intToFloat = function(num, decPlaces) {
-		return num.toFixed(decPlaces);
-	}
 
 	//all array related function
 	/*
@@ -173,7 +184,7 @@
 	}
 
 	/*
-	 * Functions related to objectss
+	 * Functions related to objects
 	 * return in form of array, nested objects are preserved
 	*/
 	assist.lastObjectElem = function(input, num) {
@@ -199,6 +210,34 @@
 		return assist.getObjKeys(obj).length;
 	};
 
+	//prevents future extensions to the object
+	//This is a permanent change: once an object has been made non-extensible
+	assist.preventObjExtensions = function(obj) {
+		return objPreventExtensions(obj);
+	};
+
+	assist.isObjExtensible = function(obj) {
+		return objIsExtensible(obj);
+	}
+
+	//works as preventObjExtensions but
+	//none of its existing properties or methods can be removed
+	assist.sealObj = function(obj) {
+		return objSeal(obj);
+	};
+
+	assist.isObjSealed = function(obj) {
+		return objIsSealed(obj);
+	}
+
+	//complete lock down of object
+	assist.freezeObj = function(obj) {
+		return objFreeze(obj);
+	};
+
+	assist.isObjFrozen = function(obj) {
+		return objIsFrozen(obj);
+	}
 	//Functions related to time
 	/*
 	 *Just to get timestamp
