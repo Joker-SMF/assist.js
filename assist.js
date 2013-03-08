@@ -20,7 +20,8 @@
 		objSeal = Object.seal,
 		objIsSealed = Object.isSealed,
 		objFreeze = Object.freeze,
-		objIsFrozen = Object.isFrozen;
+		objIsFrozen = Object.isFrozen,
+		objDescription = Object.getOwnPropertyDescriptor;
 
 	assist.noConflict = function() {
 		root.assist = previousAssist;
@@ -237,6 +238,10 @@
 
 	assist.isObjFrozen = function(obj) {
 		return objIsFrozen(obj);
+	}
+
+	assist.getObjDescription = function(obj, prop) {
+		return objDescription(obj, prop);
 	}
 	//Functions related to time
 	/*
