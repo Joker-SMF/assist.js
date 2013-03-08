@@ -9,12 +9,13 @@
 	if (typeof exports !== 'undefined') assist = exports;
 	else assist = root.assist = {};
 
+	var slice = Array.prototype.slice, objHasProperty = Object.prototype.hasOwnProperty, objKeys = Object.keys;
 	var assist;
+
 	assist.noConflict = function() {
 		root.assist = previousAssist;
 		return this;
 	};
-	var slice = Array.prototype.slice, objHasProperty = Object.prototype.hasOwnProperty, objKeys = Object.keys;
 
 	assist.enableLog = true;
 	assist.prevloadAjaxIds = {
@@ -263,5 +264,4 @@
 	assist.loadAjaxFileSuccess = function() {
 		if(assist.ajaxCallback.success) assist.ajaxCallback.success();
 	};
-
 }).call(this);
